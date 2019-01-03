@@ -3,8 +3,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 import os
 
-SMALLEST_RADIUS = 20
-COMPLETION = 0.55
+SMALLEST_RADIUS = 30
+COMPLETION = 0.50
 
 
 def ExportSize(core_size, count):
@@ -56,7 +56,7 @@ for i in wells[0, :]:
         nearcenter = ((well_radius - 2 * r - 1) < loc[0] < well_radius) \
                      and ((well_radius - 2 * r - 1) < loc[1] < well_radius)
         r_score.extend([similarity])
-        if previous_similarity > COMPLETION and similarity < previous_similarity and previous_nearcenter is True:
+        if previous_similarity > COMPLETION and (similarity < previous_similarity or nearcenter is False) and previous_nearcenter is True:
             cv2.circle(im, previous_center, r - 1, (0, 0, 255), 2)
             count += 1
             cv2.putText(im, str(count), previous_center, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
@@ -67,15 +67,11 @@ for i in wells[0, :]:
         previous_center = (well_center[0] - well_radius + loc[0] + r, \
                            well_center[1] - well_radius + loc[1] + r)
 
-    # Find the first local maxima
 
     # plt.subplot(221),plt.imshow(well_i,'gray')
     # plt.subplot(222),plt.imshow(edges, 'gray')
     # plt.subplot(212),plt.plot(range(SMALLEST_RADIUS,well_radius),r_score)
     # plt.show()
-
-    # cv2.circle(im,(well_center[0] - well_radius + core_loc[0] + core_radius, well_center[1] - well_radius + core_loc[1] + core_radius), \
-    #            core_radius,(0,0,255),2)
 
     # cv2.circle(wells_mask, well_center, well_radius, 255, -1)
 
